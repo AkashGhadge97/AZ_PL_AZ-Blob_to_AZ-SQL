@@ -1,0 +1,53 @@
+{
+	"name": "df_azblob_to_azsql",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_student_data",
+						"type": "DatasetReference"
+					},
+					"name": "StudentDataFile"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_azure_sql_table",
+						"type": "DatasetReference"
+					},
+					"name": "LoadToSQL"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          StudentId as string,",
+				"          First_Name as string,",
+				"          Last_Name as string,",
+				"          Email as string,",
+				"          Phone as string,",
+				"          Country as string,",
+				"          Course as string,",
+				"          Course_Code as string,",
+				"          Active as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> StudentDataFile",
+				"StudentDataFile sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> LoadToSQL"
+			]
+		}
+	}
+}
